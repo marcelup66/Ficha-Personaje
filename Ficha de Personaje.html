@@ -1,0 +1,1029 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ficha de Personaje RPG - Diseño Mejorado</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4a2c40;
+            --secondary: #8c5e58;
+            --accent: #d9a679;
+            --light: #f2e0d5;
+            --dark: #261c21;
+            --success: #5a8c5a;
+            --danger: #8c4a4a;
+            --text: #333;
+            --background: #1a1f2d;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0d1520 0%, #1a2436 100%);
+            color: var(--light);
+            padding: 20px;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(25, 30, 45, 0.9);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+            overflow: hidden;
+            border: 1px solid var(--accent);
+        }
+        
+        header {
+            background: linear-gradient(to right, var(--primary), #5a3a50);
+            padding: 20px;
+            text-align: center;
+            border-bottom: 3px solid var(--accent);
+        }
+        
+        header h1 {
+            font-size: 2.4rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 10px;
+            color: var(--accent);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background: var(--secondary);
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn:hover {
+            background: #7a4e48;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+        
+        .btn-save {
+            background: var(--success);
+        }
+        
+        .btn-save:hover {
+            background: #4a8c4a;
+        }
+        
+        .btn-reset {
+            background: var(--danger);
+        }
+        
+        .btn-reset:hover {
+            background: #7a3a3a;
+        }
+        
+        .character-sheet {
+            padding: 25px;
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 30px;
+        }
+        
+        .character-left {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+        
+        .character-right {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+        
+        .section {
+            padding: 20px;
+            border-radius: 10px;
+            background: rgba(35, 40, 60, 0.7);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(140, 94, 88, 0.3);
+        }
+        
+        .section-title {
+            font-size: 1.5rem;
+            color: var(--accent);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--secondary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .section-title i {
+            font-size: 1.3rem;
+        }
+        
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+            gap: 15px;
+        }
+        
+        .form-group {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: var(--accent);
+            font-size: 1.05rem;
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #444;
+            border-radius: 6px;
+            background: rgba(20, 25, 35, 0.8);
+            color: var(--light);
+            transition: all 0.3s;
+            font-size: 1rem;
+        }
+        
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(217, 166, 121, 0.2);
+        }
+        
+        .underline {
+            border: none;
+            border-bottom: 1px solid #555;
+            border-radius: 0;
+            padding: 8px 0;
+            background: transparent;
+            color: #e0e0e0;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .inventory {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .inventory-column {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .equipment-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            text-align: center;
+        }
+        
+        .equipment-slot {
+            padding: 12px;
+            border: 2px dashed #555;
+            border-radius: 8px;
+            min-height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(30, 35, 55, 0.8);
+            transition: all 0.3s;
+            font-weight: bold;
+            color: var(--accent);
+            font-size: 1.1rem;
+            cursor: pointer;
+        }
+        
+        .equipment-slot:hover {
+            border-color: var(--accent);
+            background: rgba(40, 45, 70, 0.9);
+            transform: translateY(-3px);
+        }
+        
+        .abilities-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .abilities-column {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .traits-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .trait-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .trait-item::before {
+            content: "•";
+            color: var(--accent);
+            font-size: 1.5rem;
+        }
+        
+        .modifiers-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .modifiers-table th {
+            background: var(--primary);
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        .modifiers-table td {
+            padding: 12px;
+            border-bottom: 1px solid #444;
+        }
+        
+        .modifiers-table tr:nth-child(even) {
+            background: rgba(30, 35, 50, 0.5);
+        }
+        
+        .skills-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .background-section textarea {
+            min-height: 180px;
+            font-family: inherit;
+            resize: vertical;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            background: var(--success);
+            color: white;
+            border-radius: 5px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            transform: translateX(200%);
+            transition: transform 0.3s ease-out;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .portrait-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 0;
+        }
+        
+        .portrait {
+            width: 100%;
+            height: 350px;
+            background: linear-gradient(135deg, #1a2436, #2a3548);
+            border: 3px solid var(--accent);
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            margin-bottom: 20px;
+            position: relative;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        }
+        
+        .portrait img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .portrait-placeholder {
+            text-align: center;
+            color: var(--accent);
+            padding: 30px;
+            font-size: 1.1rem;
+        }
+        
+        .portrait-placeholder i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: var(--secondary);
+        }
+        
+        .upload-btn {
+            background: var(--secondary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            font-size: 1.1rem;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .upload-btn:hover {
+            background: var(--accent);
+            color: var(--dark);
+        }
+        
+        .basic-info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .stat-card {
+            background: rgba(30, 35, 50, 0.7);
+            border-radius: 8px;
+            padding: 15px;
+            border: 1px solid #444;
+            transition: all 0.3s;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .stat-card label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--accent);
+        }
+        
+        .stat-card input {
+            background: rgba(20, 25, 35, 0.9);
+            font-size: 1.1rem;
+            text-align: center;
+        }
+        
+        @media (max-width: 1200px) {
+            .character-sheet {
+                grid-template-columns: 1fr;
+            }
+            
+            .portrait {
+                height: 300px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .inventory, .abilities-grid, .skills-section {
+                grid-template-columns: 1fr;
+            }
+            
+            .equipment-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .basic-info-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .portrait {
+                height: 250px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .equipment-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .portrait {
+                height: 220px;
+            }
+            
+            .controls {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+        }
+        
+        .attribute-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .attribute-row .form-group {
+            flex: 1;
+        }
+        
+        .divider {
+            height: 1px;
+            background: linear-gradient(to right, transparent, var(--accent), transparent);
+            margin: 25px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-dragon"></i> Ficha de Personaje RPG</h1>
+            <div class="controls">
+                <button id="saveBtn" class="btn btn-save"><i class="fas fa-save"></i> Guardar Ficha</button>
+                <button id="loadBtn" class="btn"><i class="fas fa-folder-open"></i> Cargar Ficha</button>
+                <button id="resetBtn" class="btn btn-reset"><i class="fas fa-trash-alt"></i> Restablecer</button>
+            </div>
+        </header>
+        
+        <div class="character-sheet">
+            <!-- Columna izquierda: Retrato grande e información básica -->
+            <div class="character-left">
+                <div class="section">
+                    <h2 class="section-title"><i class="fas fa-portrait"></i> Retrato del Personaje</h2>
+                    <div class="portrait-container">
+                        <div class="portrait" id="characterPortrait">
+                            <div class="portrait-placeholder">
+                                <i class="fas fa-user-circle"></i>
+                                <p>Haz clic en "Subir Retrato" para agregar una imagen</p>
+                            </div>
+                        </div>
+                        <input type="file" id="portraitUpload" accept="image/*" style="display: none;">
+                        <button class="upload-btn" id="uploadBtn"><i class="fas fa-upload"></i> Subir Retrato</button>
+                    </div>
+                </div>
+                
+                <div class="section">
+                    <h2 class="section-title"><i class="fas fa-user"></i> Información Básica</h2>
+                    <div class="basic-info-grid">
+                        <div class="form-group">
+                            <label for="nombre"><i class="fas fa-signature"></i> Nombre:</label>
+                            <input type="text" id="nombre" class="underline">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="raza"><i class="fas fa-paw"></i> Raza:</label>
+                            <input type="text" id="raza" class="underline">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="clase"><i class="fas fa-chess-knight"></i> Clase:</label>
+                            <input type="text" id="clase" class="underline">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="faccion"><i class="fas fa-flag"></i> Facción:</label>
+                            <input type="text" id="faccion" class="underline">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="nivel"><i class="fas fa-level-up-alt"></i> Nivel:</label>
+                            <input type="text" id="nivel" class="underline">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="pExp"><i class="fas fa-star"></i> P.EXP:</label>
+                            <input type="text" id="pExp" class="underline" placeholder="___/___">
+                        </div>
+                    </div>
+                    
+                    <div class="divider"></div>
+                    
+                    <div class="basic-info-grid">
+                        <div class="stat-card">
+                            <label for="vida"><i class="fas fa-heart"></i> Puntos de Vida:</label>
+                            <input type="text" id="vida" class="underline">
+                        </div>
+                        
+                        <div class="stat-card">
+                            <label for="energia"><i class="fas fa-bolt"></i> Energía Mágica:</label>
+                            <input type="text" id="energia" class="underline">
+                        </div>
+                        
+                        <div class="stat-card">
+                            <label for="accion"><i class="fas fa-running"></i> Puntos de acción:</label>
+                            <input type="text" id="accion" class="underline">
+                        </div>
+                        
+                        <div class="stat-card">
+                            <label for="monedas"><i class="fas fa-coins"></i> Monedas:</label>
+                            <input type="text" id="monedas" class="underline">
+                        </div>
+                        
+                        <div class="stat-card">
+                            <label for="habilidad"><i class="fas fa-brain"></i> Puntos de Habilidad:</label>
+                            <input type="text" id="habilidad" class="underline">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Columna derecha: Resto de la ficha -->
+            <div class="character-right">
+                <!-- Características y Rasgos -->
+                <div class="section">
+                    <h2 class="section-title"><i class="fas fa-feather-alt"></i> Características y Rasgos</h2>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Características</label>
+                            <div class="traits-list">
+                                <div class="trait-item">
+                                    <input type="text" class="underline" placeholder="Característica 1">
+                                </div>
+                                <div class="trait-item">
+                                    <input type="text" class="underline" placeholder="Característica 2">
+                                </div>
+                                <div class="trait-item">
+                                    <input type="text" class="underline" placeholder="Característica 3">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Rasgos</label>
+                            <div class="traits-list">
+                                <div class="trait-item">
+                                    <input type="text" class="underline" placeholder="Rasgo 1">
+                                </div>
+                                <div class="trait-item">
+                                    <input type="text" class="underline" placeholder="Rasgo 2">
+                                </div>
+                                <div class="trait-item">
+                                    <input type="text" class="underline" placeholder="Rasgo 3">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Atributos de combate -->
+                <div class="section">
+                    <h2 class="section-title"><i class="fas fa-shield-alt"></i> Atributos de Combate</h2>
+                    <div class="stats-grid">
+                        <div class="form-group">
+                            <label for="ataqueMagico"><i class="fas fa-magic"></i> Ataque Mágico:</label>
+                            <input type="text" id="ataqueMagico" class="underline">
+                        </div>
+                        <div class="form-group">
+                            <label for="armadura"><i class="fas fa-shield-virus"></i> Armadura:</label>
+                            <input type="text" id="armadura" class="underline">
+                        </div>
+                        <div class="form-group">
+                            <label for="ataqueFisico"><i class="fas fa-fist-raised"></i> Ataque físico:</label>
+                            <input type="text" id="ataqueFisico" class="underline">
+                        </div>
+                        <div class="form-group">
+                            <label for="resistenciaMagica"><i class="fas fa-hat-wizard"></i> Resistencia Mágica:</label>
+                            <input type="text" id="resistenciaMagica" class="underline">
+                        </div>
+                        <div class="form-group">
+                            <label for="rango"><i class="fas fa-bullseye"></i> Rango:</label>
+                            <input type="text" id="rango" class="underline">
+                        </div>
+                        <div class="form-group">
+                            <label for="aptitudMagica"><i class="fas fa-wand-magic-sparkles"></i> Aptitud mágica:</label>
+                            <input type="text" id="aptitudMagica" class="underline">
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Trasfondo -->
+                <div class="section">
+                    <h2 class="section-title"><i class="fas fa-book"></i> Trasfondo</h2>
+                    <div class="attribute-row">
+                        <div class="form-group">
+                            <label for="edad"><i class="fas fa-hourglass-half"></i> Edad:</label>
+                            <input type="text" id="edad" class="underline">
+                        </div>
+                        <div class="form-group">
+                            <label for="origen"><i class="fas fa-globe-europe"></i> Lugar de origen:</label>
+                            <input type="text" id="origen" class="underline">
+                        </div>
+                        <div class="form-group">
+                            <label for="mano"><i class="fas fa-hand-paper"></i> Mano hábil:</label>
+                            <input type="text" id="mano" class="underline">
+                        </div>
+                    </div>
+                    <div class="attribute-row">
+                        <div class="form-group">
+                            <label for="subespecie"><i class="fas fa-dna"></i> Subespecie:</label>
+                            <input type="text" id="subespecie" class="underline">
+                        </div>
+                        <div class="form-group">
+                            <label for="motivacion"><i class="fas fa-bullseye"></i> Motivación:</label>
+                            <input type="text" id="motivacion" class="underline">
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Inventario -->
+                <div class="section">
+                    <h2 class="section-title"><i class="fas fa-backpack"></i> Inventario</h2>
+                    <div class="inventory">
+                        <div class="inventory-column">
+                            <input type="text" class="underline" placeholder="Objeto 1">
+                            <input type="text" class="underline" placeholder="Objeto 2">
+                            <input type="text" class="underline" placeholder="Objeto 3">
+                            <input type="text" class="underline" placeholder="Objeto 4">
+                            <input type="text" class="underline" placeholder="Objeto 5">
+                        </div>
+                        <div class="inventory-column">
+                            <input type="text" class="underline" placeholder="Objeto 6">
+                            <input type="text" class="underline" placeholder="Objeto 7">
+                            <input type="text" class="underline" placeholder="Objeto 8">
+                            <input type="text" class="underline" placeholder="Objeto 9">
+                            <input type="text" class="underline" placeholder="Objeto 10">
+                        </div>
+                    </div>
+                    <button class="btn" id="addItemBtn" style="margin-top: 15px;"><i class="fas fa-plus-circle"></i> Añadir Objeto</button>
+                </div>
+                
+                <!-- Equipamiento -->
+                <div class="section">
+                    <h2 class="section-title"><i class="fas fa-vest"></i> Equipamiento</h2>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <table class="modifiers-table">
+                                <thead>
+                                    <tr>
+                                        <th>Objeto</th>
+                                        <th>Bonos</th>
+                                        <th>Extras</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><input type="text" class="underline" placeholder="Espada"></td>
+                                        <td><input type="text" class="underline" placeholder="+5 ataque"></td>
+                                        <td><input type="text" class="underline" placeholder="Fuego"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="text" class="underline" placeholder="Escudo"></td>
+                                        <td><input type="text" class="underline" placeholder="+3 defensa"></td>
+                                        <td><input type="text" class="underline" placeholder="Mágico"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="text" class="underline" placeholder="Armadura"></td>
+                                        <td><input type="text" class="underline" placeholder="+8 defensa"></td>
+                                        <td><input type="text" class="underline" placeholder="Acero"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="text" class="underline" placeholder="Amuleto"></td>
+                                        <td><input type="text" class="underline" placeholder="+2 magia"></td>
+                                        <td><input type="text" class="underline" placeholder="Protección"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="text" class="underline" placeholder="Botas"></td>
+                                        <td><input type="text" class="underline" placeholder="+1 agilidad"></td>
+                                        <td><input type="text" class="underline" placeholder="Velocidad"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <h3 style="margin: 25px 0 15px; color: var(--accent); text-align: center;">
+                        <i class="fas fa-tshirt"></i> Slots de Equipo
+                    </h3>
+                    <div class="equipment-grid">
+                        <div class="equipment-slot">Hombro derecho</div>
+                        <div class="equipment-slot">Cabeza</div>
+                        <div class="equipment-slot">Hombro izquierdo</div>
+                        <div class="equipment-slot">Brazo derecho</div>
+                        <div class="equipment-slot">Tronco</div>
+                        <div class="equipment-slot">Brazo izquierdo</div>
+                        <div class="equipment-slot">Mano derecha</div>
+                        <div class="equipment-slot">Piernas</div>
+                        <div class="equipment-slot">Mano izquierda</div>
+                        <div class="equipment-slot">Pie derecho</div>
+                        <div class="equipment-slot">Cola*</div>
+                        <div class="equipment-slot">Pie izquierdo</div>
+                    </div>
+                </div>
+                
+                <!-- Habilidades innatas -->
+                <div class="section">
+                    <h2 class="section-title"><i class="fas fa-star"></i> Habilidades innatas</h2>
+                    <div class="abilities-grid">
+                        <div class="abilities-column">
+                            <div class="trait-item">
+                                <input type="text" class="underline" placeholder="Visión nocturna">
+                            </div>
+                            <div class="trait-item">
+                                <input type="text" class="underline" placeholder="Resistencia al frío">
+                            </div>
+                            <div class="trait-item">
+                                <input type="text" class="underline" placeholder="Escamas protectoras">
+                            </div>
+                            <div class="trait-item">
+                                <input type="text" class="underline" placeholder="Sentidos agudos">
+                            </div>
+                        </div>
+                        <div class="abilities-column">
+                            <div class="trait-item">
+                                <input type="text" class="underline" placeholder="Regeneración">
+                            </div>
+                            <div class="trait-item">
+                                <input type="text" class="underline" placeholder="Inmunidad al veneno">
+                            </div>
+                            <div class="trait-item">
+                                <input type="text" class="underline" placeholder="Aliento de fuego">
+                            </div>
+                            <div class="trait-item">
+                                <input type="text" class="underline" placeholder="Camuflaje">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Modificadores -->
+                <div class="section">
+                    <h2 class="section-title"><i class="fas fa-sliders-h"></i> Modificadores</h2>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <table class="modifiers-table">
+                                <thead>
+                                    <tr>
+                                        <th>Modificador</th>
+                                        <th>Cantidad</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><input type="text" class="underline" placeholder="Fuerza"></td>
+                                        <td><input type="text" class="underline" placeholder="+2"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="text" class="underline" placeholder="Agilidad"></td>
+                                        <td><input type="text" class="underline" placeholder="+1"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="text" class="underline" placeholder="Inteligencia"></td>
+                                        <td><input type="text" class="underline" placeholder="+3"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="text" class="underline" placeholder="Defensa"></td>
+                                        <td><input type="text" class="underline" placeholder="+4"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="text" class="underline" placeholder="Magia"></td>
+                                        <td><input type="text" class="underline" placeholder="+5"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Habilidades y Magias -->
+                <div class="section">
+                    <h2 class="section-title"><i class="fas fa-magic"></i> Habilidades y Magias</h2>
+                    <div class="skills-section">
+                        <div class="form-group">
+                            <h3><i class="fas fa-tools"></i> Habilidades Generales</h3>
+                            <div class="traits-list">
+                                <div class="trait-item">
+                                    <input type="text" class="underline" placeholder="Sigilo">
+                                </div>
+                                <div class="trait-item">
+                                    <input type="text" class="underline" placeholder="Persuasión">
+                                </div>
+                                <div class="trait-item">
+                                    <input type="text" class="underline" placeholder="Supervivencia">
+                                </div>
+                                <div class="trait-item">
+                                    <input type="text" class="underline" placeholder="Medicina">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <h3><i class="fas fa-hat-wizard"></i> Magias</h3>
+                            <div class="traits-list">
+                                <div class="trait-item">
+                                    <input type="text" class="underline" placeholder="Bola de fuego">
+                                </div>
+                                <div class="trait-item">
+                                    <input type="text" class="underline" placeholder="Teletransporte">
+                                </div>
+                                <div class="trait-item">
+                                    <input type="text" class="underline" placeholder="Curación">
+                                </div>
+                                <div class="trait-item">
+                                    <input type="text" class="underline" placeholder="Escudo mágico">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Apartado de trasfondo -->
+                <div class="section background-section">
+                    <h2 class="section-title"><i class="fas fa-scroll"></i> Historia y Trasfondo</h2>
+                    <textarea id="background" placeholder="Escribe aquí la historia y trasfondo de tu personaje..."></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="notification" class="notification">
+        <i class="fas fa-check-circle"></i> ¡Ficha guardada correctamente!
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Referencias a los elementos
+            const saveBtn = document.getElementById('saveBtn');
+            const loadBtn = document.getElementById('loadBtn');
+            const resetBtn = document.getElementById('resetBtn');
+            const notification = document.getElementById('notification');
+            const uploadBtn = document.getElementById('uploadBtn');
+            const portraitUpload = document.getElementById('portraitUpload');
+            const characterPortrait = document.getElementById('characterPortrait');
+            const addItemBtn = document.getElementById('addItemBtn');
+            
+            // Funcionalidad de subir retrato
+            uploadBtn.addEventListener('click', function() {
+                portraitUpload.click();
+            });
+            
+            portraitUpload.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        const img = document.createElement('img');
+                        img.src = event.target.result;
+                        characterPortrait.innerHTML = '';
+                        characterPortrait.appendChild(img);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+            
+            // Añadir nuevo objeto al inventario
+            addItemBtn.addEventListener('click', function() {
+                const inventoryColumns = document.querySelectorAll('.inventory-column');
+                const firstColumn = inventoryColumns[0];
+                
+                if (firstColumn) {
+                    const newInput = document.createElement('input');
+                    newInput.type = 'text';
+                    newInput.className = 'underline';
+                    newInput.placeholder = 'Nuevo objeto';
+                    firstColumn.appendChild(newInput);
+                }
+            });
+            
+            // Guardar ficha
+            saveBtn.addEventListener('click', function() {
+                const characterData = {};
+                
+                // Recopilar todos los inputs
+                const inputs = document.querySelectorAll('input, textarea');
+                inputs.forEach(input => {
+                    const key = input.id || input.placeholder || input.previousElementSibling?.textContent || input.parentNode.previousElementSibling?.textContent;
+                    if (key) {
+                        characterData[key] = input.value;
+                    }
+                });
+                
+                // Guardar imagen si existe
+                const portraitImg = characterPortrait.querySelector('img');
+                if (portraitImg) {
+                    characterData.portrait = portraitImg.src;
+                }
+                
+                // Guardar en localStorage
+                localStorage.setItem('characterSheet', JSON.stringify(characterData));
+                
+                // Mostrar notificación
+                showNotification('¡Ficha guardada correctamente!');
+            });
+            
+            // Cargar ficha
+            loadBtn.addEventListener('click', function() {
+                const savedData = localStorage.getItem('characterSheet');
+                if (!savedData) {
+                    showNotification('No hay datos guardados');
+                    return;
+                }
+                
+                const characterData = JSON.parse(savedData);
+                
+                // Recorrer todos los inputs y asignar valores
+                const inputs = document.querySelectorAll('input, textarea');
+                inputs.forEach(input => {
+                    const key = input.id || input.placeholder || input.previousElementSibling?.textContent || input.parentNode.previousElementSibling?.textContent;
+                    if (key && characterData[key]) {
+                        input.value = characterData[key];
+                    }
+                });
+                
+                // Cargar imagen si existe
+                if (characterData.portrait) {
+                    const img = document.createElement('img');
+                    img.src = characterData.portrait;
+                    characterPortrait.innerHTML = '';
+                    characterPortrait.appendChild(img);
+                }
+                
+                showNotification('Ficha cargada correctamente');
+            });
+            
+            // Restablecer ficha
+            resetBtn.addEventListener('click', function() {
+                if (confirm('¿Estás seguro de que quieres restablecer la ficha? Se perderán todos los datos.')) {
+                    const inputs = document.querySelectorAll('input, textarea');
+                    inputs.forEach(input => {
+                        input.value = '';
+                    });
+                    characterPortrait.innerHTML = '<div class="portrait-placeholder"><i class="fas fa-user-circle"></i><p>Haz clic en "Subir Retrato" para agregar una imagen</p></div>';
+                    showNotification('Ficha restablecida');
+                }
+            });
+            
+            // Función para mostrar notificaciones
+            function showNotification(message) {
+                notification.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
+                notification.classList.add('show');
+                
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                }, 3000);
+            }
+            
+            // Cambiar color de los slots al pasar el ratón
+            const equipmentSlots = document.querySelectorAll('.equipment-slot');
+            equipmentSlots.forEach(slot => {
+                slot.addEventListener('mouseenter', function() {
+                    this.style.borderColor = '#d9a679';
+                    this.style.color = '#f2e0d5';
+                });
+                
+                slot.addEventListener('mouseleave', function() {
+                    this.style.borderColor = '#555';
+                    this.style.color = '#d9a679';
+                });
+            });
+        });
+    </script>
+</body>
+</html>
